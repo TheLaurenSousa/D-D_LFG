@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Campaign Info</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="/dashboard">
+            <img src="../static/img/logo.png" alt="D&D LFG Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/campaigns/all">Open Campaigns</a>
+                </li>
+                {% if gmStatus == True %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/campaigns/new">Create a Campaign</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Profile</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/profile">View Profile</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="w-75 mx-auto mb-5 p-4 popout">
+        <div class="row">
+            <h1>{{campaign_info.name}}</h1>
+            <div class="col-4">
+                <p><span class="fw-bold">Format:</span> {{campaign_info.format}}</p>
+                <p><span class="fw-bold">Max Number of Players:</span> {{campaign_info.num_players}}</p>
+                <p><span class="fw-bold">Availability:</span> {{campaign_info.availability}}</p>
+                {% if session['id'] != dm_info.id and campaign_info.status == "Open" and user_in_campaign == False %}
+                    <a href="/campaigns/add/{{campaign_info.id}}/{{session['id']}}">
+                        <button class="btn btn-danger">Apply to Join This Campaign</button>
+                    </a>
+                {% elif session['id'] != dm_info.id and campaign_info.status == "Open" and user_in_campaign == True %}
+                    <a href="/campaigns/remove/{{campaign_info.id}}/{{session['id']}}">
+                        <button class="btn btn-danger">Leave This Campaign</button>
+                    </a>
+                {% elif session['id'] == dm_info.id and campaign_info.status == "Open"%}
+                <a href="/campaigns/close/{{campaign_info.id}}">
+                    <button class="btn btn-danger">Close This Campaign to Applicants</button>
+                </a>
+                {% elif session['id'] == dm_info.id and campaign_info.status == "Closed"%}
+                <a href="/campaigns/open/{{campaign_info.id}}">
+                    <button class="btn btn-danger">Open This Campaign to Applicants</button>
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-8">
+                <p class="fw-bold">Campaign Description:</p>
+                <p>{{campaign_info.description}}</p>
+            </div>
+            <hr class="solid mt-5 mb-5">
+            <h2>The Dungeon Master</h2>
+            <div class="row">
+                <div class="col-4">
+                    <p><span class="fw-bold">Name: </span>{{dm_info.name}}</p>
+                    <p><span class="fw-bold">Experience Level: </span>{{dm_info.experience}}</p>
+                    <form action="/profile/{{dm_info.id}}" class="mx-auto my-auto">
+                        <input type="submit" class="btn btn-danger" value="View {{dm_info.name}}'s Profile">
+                    </form>
+                </div>
+                <div class="col-6">
+                    <p class="fw-bold">Dungeon Master Bio:</p>
+                    <p>{{dm_info.bio}}</p>
+                </div>
+            </div>
+        </div>
+        <hr class="solid mt-5 mb-5">
+        <h2>The Players</h2>
+        <table class="table table-striped table-borderless mx-auto mt-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Availability</th>
+                    <th>Experience Level</th>
+                    <th>Profile</th>
+                    {% if session['id'] == dm_info.id %}
+                        <th>Accept/Reject</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in player_info %}
+                    <tr>
+                        <td>{{player.name}}</td>
+                        <td>{{player.status}}</td>
+                        <td>{{player.availability}}</td>
+                        <td>{{player.experience}}</td>
+                        <td>
+                            <form action="/profile/{{player.id}}" class="mx-auto my-auto">
+                                <input type="submit" class="btn btn-danger" value="View {{player.name}}'s Profile">
+                            </form>
+                        </td>
+                        {% if session['id'] == dm_info.id %}
+                            <td>
+                                {% if player.status == "Applied" %}
+                                    <p class="d-flex justify-content-between">
+                                        <a href="/campaigns/accept/{{campaign_info.id}}/{{player.id}}"><button class="btn btn-danger">Accept</button></a>
+                                        <a href="/campaigns/reject/{{campaign_info.id}}/{{player.id}}"><button class="btn btn-danger">Reject</button></a>
+                                    </p>
+                                {% elif player.status == "Accepted" %}
+                                    <a href="/campaigns/reject/{{campaign_info.id}}/{{player.id}}"><button class="btn btn-danger">Reject</button></a>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if user.status == "Accepted" or session['id'] == dm_info.id %}
+            <hr class="solid mt-5 mb-5">
+            <h2>Chat</h2>
+            {% for message in all_messages %}
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <p class="font-weight-bold">{{message.commenter_name}}</p>
+                        {% if message.user_id == session['id'] %}
+                            <div class="card-text d-flex justify-content-between align-items-center">
+                                <p>{{message.content}}</p>
+                                <a href="/delete_message/{{campaign_info.id}}/{{message.message_id}}" class="btn btn-danger">Delete</a>
+                            </div>
+                        {% else %}
+                            <p class="card-text">{{message.content}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            <p class="fw-bold mt-3">Post a Message</p>
+            <form action="/publish_message/{{campaign_info.id}}" method="post" class="form-group">
+                <input type="hidden" name="user_id" value="{{user.user_id}}">
+                <input class="form-control" type="text" name="content">
+                <input class="btn btn-primary mt-2" type="submit" value="Comment">
+            </form>
+    {% endif %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>

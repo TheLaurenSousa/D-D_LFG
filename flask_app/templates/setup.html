@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{  url_for('static', filename='js/site.js')}}" async></script>
+    <title>New User Setup</title>
+</head>
+<body>
+    <img src="../static/img/logo.png" alt="D&D LFG Logo">
+    <div class="mt-5 mx-auto w-75" id="initial_question">
+        {% with messages = get_flashed_messages(category_filter=['registration']) %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p style="color:red; text-align:center">{{message}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <h3 class="text-center">Are you interested in being a Player or a DM?</h2>
+        <div class="d-flex justify-content-center">
+            <select name="role" id="role">
+                <option value="player">Player</option>
+                <option value="dm">Dungeon Master</option>
+            </select>
+            <input type="button" onclick="role_selected()" value="Submit">
+        </div>
+    </div>
+    <div id="field w-25">
+        <div id="player_questions" style="display: none;"> <!--Questions for Players-->
+            <h3 class="text-center">Player Questionaire</h3>
+            <div class="d-flex justify-content-center">
+                <form action="/register_player" method="post" class="form-group">
+                    <input type="hidden" name="user_id" value="{{user.id}}">
+                    <label for="experience">Experience Level:</label>
+                    <select name="experience" id="experience" class="form-control">
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Expert">Expert</option>
+                    </select>
+                    <label for="class1">Preferred Class #1:</label>
+                    <select name="class1" id="class1" class="form-control">
+                        <option value="Artificer">Artificer</option>
+                        <option value="Barbarian">Barbarian</option>
+                        <option value="Bard">Bard</option>
+                        <option value="Cleric">Cleric</option>
+                        <option value="Druid">Druid</option>
+                        <option value="Fighter">Fighter</option>
+                        <option value="Monk">Monk</option>
+                        <option value="Paladin">Paladin</option>
+                        <option value="Ranger">Ranger</option>
+                        <option value="Rogue">Rogue</option>
+                        <option value="Sorcerer">Sorcerer</option>
+                        <option value="Warlock">Warlock</option>
+                        <option value="Wizard">Wizard</option>
+                    </select>
+                    <label for="class2">Preferred Class #2:</label>
+                    <select name="class2" id="class2" class="form-control">
+                        <option value="Artificer">Artificer</option>
+                        <option value="Barbarian">Barbarian</option>
+                        <option value="Bard">Bard</option>
+                        <option value="Cleric">Cleric</option>
+                        <option value="Druid">Druid</option>
+                        <option value="Fighter">Fighter</option>
+                        <option value="Monk">Monk</option>
+                        <option value="Paladin">Paladin</option>
+                        <option value="Ranger">Ranger</option>
+                        <option value="Rogue">Rogue</option>
+                        <option value="Sorcerer">Sorcerer</option>
+                        <option value="Warlock">Warlock</option>
+                        <option value="Wizard">Wizard</option>
+                    </select>
+                    <label for="class3">Preferred Class #3:</label>
+                    <select name="class3" id="class3" class="form-control">
+                        <option value="Artificer">Artificer</option>
+                        <option value="Barbarian">Barbarian</option>
+                        <option value="Nard">Bard</option>
+                        <option value="Cleric">Cleric</option>
+                        <option value="Druid">Druid</option>
+                        <option value="Fighter">Fighter</option>
+                        <option value="Monk">Monk</option>
+                        <option value="Paladin">Paladin</option>
+                        <option value="Ranger">Ranger</option>
+                        <option value="Rogue">Rogue</option>
+                        <option value="Sorcerer">Sorcerer</option>
+                        <option value="Warlock">Warlock</option>
+                        <option value="Wizard">Wizard</option>
+                    </select>
+                    <label for="availability">Availability:</label>
+                    <textarea class="form-control h-25" type="text" rows="2" cols="50" name="availability"></textarea>
+                    <label for="bio">Player Bio:</label>
+                    <textarea class="form-control h-25" type="text" rows="2" cols="50" name="bio"></textarea>
+                    <input class="btn btn-danger mt-2" type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+        <div id="dm_questions" style="display: none;"><!--Questions for Players-->
+            <h3 class="text-center">Dungeon Master Questionaire</h3>
+            <div class="d-flex justify-content-center">
+                <form action="/register_dm" method="post" class="form-group">
+                    <input type="hidden" name="user_id" value="{{user.id}}">
+                    <label for="experience">Experience Level:</label>
+                    <select name="experience" id="experience" class="form-control">
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Expert">Expert</option>
+                    </select>
+                    <label for="availability">Availability:</label>
+                    <textarea class="form-control h-25" type="text" rows="2" cols="50" name="availability"></textarea>
+                    <label for="bio">DM Bio:</label>
+                    <textarea class="form-control h-25" type="text" rows="2" cols="50" name="bio"></textarea>
+                    <input class="btn btn-danger mt-2" type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

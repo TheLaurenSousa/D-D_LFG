@@ -1,0 +1,19 @@
+body{
+    background-color: #ffe68c;
+    color: #786b3d;
+}
+
+.popout{
+    background-color: #fffcf2;
+    border-radius: 25px;
+    -webkit-box-shadow: 0 0 5px #000000;
+        box-shadow: 0 0 5px #000000;
+}
+
+#profilePic{
+    display: inline-block; 
+    position: relative; 
+    width: 200px; height: 200px; 
+    overflow: hidden; 
+    border-radius: 50%;
+}

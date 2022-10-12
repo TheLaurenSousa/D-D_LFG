@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Profile</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="/dashboard">
+            <img src="../static/img/logo.png" alt="D&D LFG Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/campaigns/all">Open Campaigns</a>
+                </li>
+                {% if gmStatus == True %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/campaigns/new">Create a Campaign</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Profile</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/profile">View Profile</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row pt-3 popout">
+            <div class="col-4 text-center mb-5">
+                <img class="img-fluid" src="../static/img/profile_pics/{{user.profile_pic}}" alt="{{user.name}}'s profile picture" width="200" height="200" class="profilePic" id="profilePic">
+                <h2>{{user.name}}</h2>
+                <h4 class="mt-5">Update Profile Picture?</h4>
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="user_id" value="{{user.id}}">
+                    <input type="file" name="file">
+                    <input type="submit" value="Upload">
+                </form>
+                {% if dm_info == False %}
+                    <form action="/setup" class="text-center mt-5 mb-5">
+                        <input type="submit" class="btn btn-danger" value="Interested in Being a Dungeon Master?">
+                    </form>
+                {% elif player_info == False %}
+                    <form action="/setup" class="mx-auto my-auto">
+                        <input type="submit" class="btn btn-danger" value="Interested in Being a Player?">
+                    </form>
+                {% endif %}
+                <form action="/profile" class="mt-5">
+                    <input type="submit" class="btn btn-danger" value="Back to Profile">
+                </form>
+            </div>
+            <div class="col-8">
+                {% if player_info != False %}
+                    <h2>Player Profile</h2>
+                    <form action="/update_player_info" method="post" class="form-group">
+                        <input type="hidden" name="user_id" value="{{user.id}}">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="experience">Experience Level:</label>
+                                <select name="experience" id="experience" class="form-control">
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                                <label for="class1">Preferred Class #1:</label>
+                                <select name="class1" id="class1" class="form-control">
+                                    <option value="Artificer">Artificer</option>
+                                    <option value="Barbarian">Barbarian</option>
+                                    <option value="Bard">Bard</option>
+                                    <option value="Cleric">Cleric</option>
+                                    <option value="Druid">Druid</option>
+                                    <option value="Fighter">Fighter</option>
+                                    <option value="Monk">Monk</option>
+                                    <option value="Paladin">Paladin</option>
+                                    <option value="Ranger">Ranger</option>
+                                    <option value="Rogue">Rogue</option>
+                                    <option value="Sorcerer">Sorcerer</option>
+                                    <option value="Warlock">Warlock</option>
+                                    <option value="Wizard">Wizard</option>
+                                </select>
+                                <label for="class2">Preferred Class #2:</label>
+                                <select name="class2" id="class2" class="form-control">
+                                    <option value="Artificer">Artificer</option>
+                                    <option value="Barbarian">Barbarian</option>
+                                    <option value="Bard">Bard</option>
+                                    <option value="Cleric">Cleric</option>
+                                    <option value="Druid">Druid</option>
+                                    <option value="Fighter">Fighter</option>
+                                    <option value="Monk">Monk</option>
+                                    <option value="Paladin">Paladin</option>
+                                    <option value="Ranger">Ranger</option>
+                                    <option value="Rogue">Rogue</option>
+                                    <option value="Sorcerer">Sorcerer</option>
+                                    <option value="Warlock">Warlock</option>
+                                    <option value="Wizard">Wizard</option>
+                                </select>
+                                <label for="class3">Preferred Class #3:</label>
+                                <select name="class3" id="class3" class="form-control">
+                                    <option value="Artificer">Artificer</option>
+                                    <option value="Barbarian">Barbarian</option>
+                                    <option value="Bard">Bard</option>
+                                    <option value="Cleric">Cleric</option>
+                                    <option value="Druid">Druid</option>
+                                    <option value="Fighter">Fighter</option>
+                                    <option value="Monk">Monk</option>
+                                    <option value="Paladin">Paladin</option>
+                                    <option value="Ranger">Ranger</option>
+                                    <option value="Rogue">Rogue</option>
+                                    <option value="Sorcerer">Sorcerer</option>
+                                    <option value="Warlock">Warlock</option>
+                                    <option value="Wizard">Wizard</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="availability">Availability:</label>
+                                <textarea class="form-control h-25" type="text" rows="2" cols="50" name="availability" value="{{player_info.availability}}"></textarea>
+                                <label for="bio">Player Bio:</label>
+                                <textarea class="form-control h-25" type="text" rows="2" cols="50" name="bio" value="{{player_info.bio}}"></textarea>
+                                <input class="btn btn-primary mt-2" type="submit" value="Submit">
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+                {% if dm_info != False %}
+                    <h2>Dungeon Master Profile</h2>
+                        <form action="/update_dm_info" method="post" class="form-group">
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label for="experience">Experience Level:</label>
+                                    <select name="experience" id="experience" class="form-control">
+                                        <option value="beginner">Beginner</option>
+                                        <option value="intermediate">Intermediate</option>
+                                        <option value="expert">Expert</option>
+                                    </select>
+                                    <label for="availability">Availability:</label>
+                                    <textarea class="form-control h-25" type="text" rows="2" cols="50" name="availability" value="{{dm_info.availability}}"></textarea>
+                                </div>
+                                <div class="col-6">
+                                    <label for="bio">DM Bio:</label>
+                                    <textarea class="form-control h-25" type="text" rows="2" cols="50" name="bio" value="{{dm_info.bio}}"></textarea>
+                                    <input class="btn btn-primary mt-2" type="submit" value="Submit">
+                                </div>
+                            </div>
+                        </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- <div class="border border-dark w-75 mx-auto p-2">
+        <div class="d-flex justify-content-between">
+            <span>
+                <img src="../static/img/profile_pics/{{user.profile_pic}}" alt="{{user.name}}'s profile picture" width="200" height="200">
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="user_id" value="{{user.id}}">
+                    <input type="file" name="file">
+                    <input type="submit" value="Upload">
+                </form>
+            </span>
+        </div>
+        <div>
+            <p>Name: {{user.name}}</p>
+                <div class="d-flex justify-content-between">
+                    {% if player_info != False %}
+                    <div class="w-50 m-1">
+                        <h2 class="text-center">Player Information:</h2>
+                        <form action="/update_player_info" method="post">
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                            <label for="experience">Experience Level:</label>
+                            <select name="experience" id="experience" class="form-control">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                            <label for="class1">Preferred Class #1:</label>
+                            <select name="class1" id="class1" class="form-control">
+                                <option value="artificer">Artificer</option>
+                                <option value="barbarian">Barbarian</option>
+                                <option value="bard">Bard</option>
+                                <option value="cleric">Cleric</option>
+                                <option value="druid">Druid</option>
+                                <option value="fighter">Fighter</option>
+                                <option value="monk">Monk</option>
+                                <option value="paladin">Paladin</option>
+                                <option value="ranger">Ranger</option>
+                                <option value="rogue">Rogue</option>
+                                <option value="sorcerer">Sorcerer</option>
+                                <option value="warlock">Warlock</option>
+                                <option value="wizard">Wizard</option>
+                            </select>
+                            <label for="class2">Preferred Class #2:</label>
+                            <select name="class2" id="class2" class="form-control">
+                                <option value="artificer">Artificer</option>
+                                <option value="barbarian">Barbarian</option>
+                                <option value="bard">Bard</option>
+                                <option value="cleric">Cleric</option>
+                                <option value="druid">Druid</option>
+                                <option value="fighter">Fighter</option>
+                                <option value="monk">Monk</option>
+                                <option value="paladin">Paladin</option>
+                                <option value="ranger">Ranger</option>
+                                <option value="rogue">Rogue</option>
+                                <option value="sorcerer">Sorcerer</option>
+                                <option value="warlock">Warlock</option>
+                                <option value="wizard">Wizard</option>
+                            </select>
+                            <label for="class3">Preferred Class #3:</label>
+                            <select name="class3" id="class3" class="form-control">
+                                <option value="artificer">Artificer</option>
+                                <option value="barbarian">Barbarian</option>
+                                <option value="bard">Bard</option>
+                                <option value="cleric">Cleric</option>
+                                <option value="druid">Druid</option>
+                                <option value="fighter">Fighter</option>
+                                <option value="monk">Monk</option>
+                                <option value="paladin">Paladin</option>
+                                <option value="ranger">Ranger</option>
+                                <option value="rogue">Rogue</option>
+                                <option value="sorcerer">Sorcerer</option>
+                                <option value="warlock">Warlock</option>
+                                <option value="wizard">Wizard</option>
+                            </select>
+                            <label for="availability">Availability:</label>
+                            <textarea class="form-control h-25" type="text" rows="2" cols="50" name="availability" value="{{player_info.availability}}"></textarea>
+                            <label for="bio">Player Bio:</label>
+                            <textarea class="form-control h-25" type="text" rows="2" cols="50" name="bio" value="{{player_info.bio}}"></textarea>
+                            <input class="btn btn-primary mt-2" type="submit" value="Submit">
+                        </form>
+                    </div>
+                    {% endif %}
+                    {% if dm_info != False %}
+                    <div class="w-50 m-1">
+                        <h2 class="text-center">DM Information:</h2>
+                        <form action="/update_dm_info" method="post" class="form-group w-75">
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                            <label for="experience">Experience Level:</label>
+                            <select name="experience" id="experience" class="form-control">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                            <label for="availability">Availability:</label>
+                            <textarea class="form-control h-25" type="text" rows="2" cols="50" name="availability" value="{{dm_info.availability}}"></textarea>
+                            <label for="bio">DM Bio:</label>
+                            <textarea class="form-control h-25" type="text" rows="2" cols="50" name="bio" value="{{dm_info.bio}}"></textarea>
+                            <input class="btn btn-primary mt-2" type="submit" value="Submit">
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+        </div>
+    </div> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
